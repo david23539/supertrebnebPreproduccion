@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+/* eslint-disable no-undef,no-useless-escape */
 'use strict'
 
 //TODO Base de datos
@@ -11,7 +11,7 @@ const constant ={
 	api:{
 		MESSAGE_OK: 'El metodo esta funcionando',
 		SERVICE_OK: 'El servicio funciona',
-		AUTHENTICATE_FAIL: 'la peticion no tien la cabecera de autenticación',
+		AUTHENTICATE_FAIL: 'la peticion no tiene la cabecera de autenticación',
 		EXPIRED_TOKEN:'El token ha expirado',
 		NO_VALID_TOKEN: 'El token no es valido',
 		ACCESS_DENIED: 'acceso denegado a esta zona',
@@ -33,7 +33,8 @@ const constant ={
 
 	},
 	functions:{
-		ERROR_PARAMETROS_ENTRADA: 'Los parametros de entrada nos son correctos',
+		ERROR_PARAMETROS_ENTRADA: 'Los parametros de entrada no son correctos',
+		ERROR_PARAMETROS_ENTRADA_LOG: 'Los parametros de entrada no correctos Categoria',
 		USER_REGISTER_SUCCESS: 'Usuario registrado correctamente',
 		USER_LOGIN_SUCCESS_TOKEN: 'Usuario logeado con token correctamente',
 		USER_LOGIN_SUCCESS: 'Usuario logeado sin token correctamente',
@@ -49,14 +50,46 @@ const constant ={
 		LOGIN_TRY_FAIL: 'aumento en uno el numero de intentos',
 		EMAIL_NO_EXIT: 'No existe el email ',
 		ERROR_GENERATE_CODE: 'Error en la generación del codigo',
-		EMAIL_SEND: 'El email se ha enviado'
+		EMAIL_SEND: 'El email se ha enviado',
+		CATEGORY_REGISTER_FAIL: 'Ha fallado el registro de la categoria',
+		PRODUCT_REGISTER_FAIL: 'Ha fallado el registro del producto',
+		EXISTS_REFERENCE_PRODUCT: 'Este producto ya existe',
+		CATEGORY_REGISTER_SUCCESS: 'Se ha creado la categoria con exito',
+		PRODUCT_REGISTER_SUCCESS: 'Se ha creado el producto con exito',
+		CATEGORY_UPDATE_SUCCESS: 'Se ha actualizado correctamente la categoria',
+		PRODUCT_UPDATE_SUCCESS: 'Se ha actualizado correctamente el producto',
+		CATEGORY_UPDATE_ERROR: 'Ha ocurrido un error al actualizar la categoria',
+		PRODUCT_UPDATE_ERROR: 'Ha ocurrido un error al actualizar el producto',
+		CATEGORY_DELETE_SUCCESS: 'La categoria se ha eliminado',
+		PRODUCT_DELETE_SUCCESS: 'El producto se ha eliminado',
+		CATEGORY_DELETE_ERROR: 'Ha ocurrido un error al eliminar la categoria',
+		PRODUCT_DELETE_ERROR: 'Ha ocurrido un error al eliminar el producto',
+		CATEGORY_GET_CATEGORY_ERROR: 'Ha ocurrido un error al obtener la categoria',
+		PRODUCT_GET_ERROR: 'Ha ocurrido un error al obtener los productos',
+		NO_DATA_CATEGORY:'No hay coincidencias',
+		NO_DATA_AVAIBLE:'No existen categorías',
+
+		NO_PRODUCT_AVAIBLE:'No existen productos'
 
 
+
+
+
+	},
+	extensions:{
+		JPG:'jpg',
+		GIF:'gif',
+		PNG:'png',
+		JPEG:'jpeg'
 	},
 	regex:{
 		EMAIL:'^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$',
 		USERNAME: '^[0-9a-zA-Z]+$',
-		CODE: '^([0-9])*$'
+		STRINGS: '^[0-9a-zA-Z]+$',
+		STRINGS_WITH_SPACES: '^[A-Za-z0-9 \s]+$',
+		CODE: '^([0-9])*$',
+		NUMBERS: '^([0-9])*$',
+		NUMBERS_AND_DECIMAL: '^[0-9]+([.][0-9]+)?$'
 
 	},
 	messageLog:{
@@ -68,7 +101,9 @@ const constant ={
 		INFO_IP: 'con ip '
 	},
 	urls:{
-		CHANGE_IP:'/../template/changeIp.html'
+		CHANGE_IP:'/../template/changeIp.html',
+		PRODUCT_IMG_ORIGINAL:'./Backend/uploadFiles/products/original/',
+		PRODUCT_IMG_RESIZE:'./Backend/uploadFiles/products/resize/'
 	}
 }
 module.exports = constant
