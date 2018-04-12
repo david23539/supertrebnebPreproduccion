@@ -6,11 +6,12 @@ const fs = require('fs')
 
 function validateImageFile(file){
 	const file_path = file.path
-
+	console.log("el path "+ file_path)
 	const file_split = file_path.split('/')
+	console.log("array "+ file_split)
 	const file_name = file_split[4]
 	// eslint-disable-next-line no-useless-escape
-    console.log(file_name);
+    console.log("el nombre "+file_name);
 	const ext_split = file_name.split('.')
 	const file_ext = ext_split[1]
 	if(file_ext === constantFile.extensions.JPEG ||file_ext === constantFile.extensions.JPG || file_ext === constantFile.extensions.PNG){
