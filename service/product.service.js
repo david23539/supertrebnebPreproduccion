@@ -28,6 +28,7 @@ function validateImageFile(file){
 }
 
 function resizeImage(req, routeOriginal, routeResized){
+	console.log(routeOriginal + " y " + routeResized)
 	jimp.read(routeOriginal,(err, image)=>{
 		if(err || !image){
 
