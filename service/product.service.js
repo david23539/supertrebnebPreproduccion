@@ -30,12 +30,14 @@ function validateImageFile(file){
 function resizeImage(req, routeOriginal, routeResized){
 	jimp.read(routeOriginal,(err, image)=>{
 		if(err || !image){
-            console.log("el error "+ err)
+
 
             auditoriaController.saveLogsData(req.user.name,err, req.connection.remoteAddress, 'image fail')
 			// res.status(constantFile.httpCode.INTERNAL_SERVER_ERROR).send({message: constantFile.functions.PRODUCT_GET_ERROR})
 			return false;
 		}else{
+            console.log("sin el error ")
+
 			return image.resize(32,32).write(routeResized)
 
 		}
