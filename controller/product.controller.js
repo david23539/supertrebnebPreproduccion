@@ -150,7 +150,7 @@ function updateProductImage(req, res){
 			const filename = serviceProduct.validateImageFile(req.files.image)
 			if(filename){
 				console.log("controller "+ filename);
-				serviceProduct.resizeImage(req, res, constantFile.urls.PRODUCT_IMG_ORIGINAL+filename, constantFile.urls.PRODUCT_IMG_RESIZE+filename)
+				serviceProduct.resizeImage(req, constantFile.urls.PRODUCT_IMG_ORIGINAL+filename, constantFile.urls.PRODUCT_IMG_RESIZE+filename)
 				ProductModel.findByIdAndUpdate(productId, {stn_imageProduct:filename, stn_imageProductResize:filename}, {new:true},(err, productUpdate)=>{
 					if(err || !productUpdate){
 						auditoriaController.saveLogsData(req.user.name,err, req.connection.remoteAddress, 'image fail')
