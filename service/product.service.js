@@ -9,7 +9,8 @@ function validateImageFile(file){
 	console.log("el path "+ file_path)
 	const file_split = file_path.split('/')
 	console.log("array "+ file_split)
-	const file_name = file_split[4]
+	const file_name = file_split[3]
+	// const file_name = file_split[4] desarrollo
 	// eslint-disable-next-line no-useless-escape
     console.log("el nombre "+file_name);
 	const ext_split = file_name.split('.')
