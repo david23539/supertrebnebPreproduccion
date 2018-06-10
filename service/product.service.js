@@ -6,10 +6,13 @@ const fs = require('fs')
 
 function validateImageFile(file){
 	const file_path = file.path
-	const file_split = file_path.split('\\')
-	const file_name = file_split[4]
+	const file_split = file_path.split('/')// para linux
+	// const file_split = file_path.split('\\') //para windows
+	const file_name = file_split[3] //para linux
+	// const file_name = file_split[4] //para windows
+
 	// eslint-disable-next-line no-useless-escape
-	const ext_split = file_name.split('\.')
+	const ext_split = file_name.split('.')
 	const file_ext = ext_split[1]
 	if(file_ext === constantFile.extensions.JPEG ||file_ext === constantFile.extensions.JPG || file_ext === constantFile.extensions.PNG){
 		return file_name
@@ -26,14 +29,14 @@ function validateImageFile(file){
 
 }
 
-function resizeImage(req, res, routeOriginal, routeResized){
+function resizeImage(req, routeOriginal, routeResized){
+
 	jimp.read(routeOriginal,(err, image)=>{
 		if(err || !image){
-			auditoriaController.saveLogsData(req.user.name,err, req.connection.remoteAddress, 'image fail')
-			res.status(constantFile.httpCode.INTERNAL_SERVER_ERROR).send({message: constantFile.functions.PRODUCT_GET_ERROR})
+            auditoriaController.saveLogsData(req.user.name,err, req.connection.remoteAddress, 'image fail')
+			return false;
 		}else{
 			return image.resize(32,32).write(routeResized)
-
 		}
 	})
 }

@@ -2,13 +2,14 @@
 
 const ProductModel = require('../model/product.model')
 const constantFile = require('../utils/Constant')
-const adapterProduct = require('../adapter/product.adapter')
+const adapterProduct = require('../adapter/product.adapter');
 const validationProduct = require('../Validation/product.validation')
 const validationGlobal = require('../Validation/global.validation')
 const auditoriaController = require('./saveLogs.controller')
 const serviceProduct = require('../service/product.service')
 const fs = require('fs')
 const path = require('path')
+
 
 
 function createProduct(req, res){
@@ -46,8 +47,26 @@ function createProduct(req, res){
 	}
 }
 
+function checkStockProduct(req, res){//todo funcion que devuelve todos los productos con los id obtenido por parametros
+	let product_IN = req.body;
+	if(validationProduct.checkIdsProduct(product_IN)){
+		ProductModel.find().where('_id').in(product_IN.ids).populate({path:'stn_categoryFk'}).exec((err, productsList_OUT)=>{
+			if(err){
+				console.log(err);
+			}
+
+			if(productsList_OUT.length > 0){
+				res.status(constantFile.httpCode.PETITION_CORRECT).send({products: adapterProduct.AdapterListProduct_OUT(productsList_OUT)});
+			}
+		});
+
+	}else{
+		paramsIvalids(res);
+	}
+}
+
 function checkReferenceProduct(reference, cb){
-	ProductModel.find({stn_referenceProduct:reference}, cb)
+	ProductModel.find({stn_referenceProduct:reference, stn_deleteProduct:false}, cb);
 }
 
 function updateProduct(req, res){
@@ -100,12 +119,12 @@ function getProductAllPagination(req, res) {
 	if(validationGlobal.validationPage(params.pagination.page)){
 		ProductModel.find({stn_deleteProduct:false}).skip(params.pagination.page).limit(10).populate({path:'stn_categoryFk'}).exec((err, products)=>{
 			if(err){
-				auditoriaController.saveLogsData(req.user.name,err, params.direccionIp.direccionData, params.direccionIp.navegador)
-				res.status(constantFile.httpCode.INTERNAL_SERVER_ERROR).send({message: constantFile.functions.PRODUCT_GET_ERROR})
+				auditoriaController.saveLogsData(req.user.name,err, params.direccionIp.direccionData, params.direccionIp.navegador);
+				res.status(constantFile.httpCode.INTERNAL_SERVER_ERROR).send({message: constantFile.functions.PRODUCT_GET_ERROR});
 			}else if(products.length === 0){
-				res.status(constantFile.httpCode.PETITION_CORRECT).send({message: constantFile.functions.NO_PRODUCT_AVAIBLE})
+				res.status(constantFile.httpCode.PETITION_CORRECT).send({message: constantFile.functions.NO_PRODUCT_AVAIBLE});
 			}else{
-				res.status(constantFile.httpCode.PETITION_CORRECT).send({products: adapterProduct.AdapterListProduct_OUT(products)})
+				res.status(constantFile.httpCode.PETITION_CORRECT).send({products: adapterProduct.AdapterListProduct_OUT(products)});
 			}
 		})
 	}else{
@@ -149,7 +168,8 @@ function updateProductImage(req, res){
 		if(req.files.image){
 			const filename = serviceProduct.validateImageFile(req.files.image)
 			if(filename){
-				serviceProduct.resizeImage(req, res, constantFile.urls.PRODUCT_IMG_ORIGINAL+filename, constantFile.urls.PRODUCT_IMG_RESIZE+filename)
+
+				serviceProduct.resizeImage(req, constantFile.urls.PRODUCT_IMG_ORIGINAL+filename, constantFile.urls.PRODUCT_IMG_RESIZE+filename)
 				ProductModel.findByIdAndUpdate(productId, {stn_imageProduct:filename, stn_imageProductResize:filename}, {new:true},(err, productUpdate)=>{
 					if(err || !productUpdate){
 						auditoriaController.saveLogsData(req.user.name,err, req.connection.remoteAddress, 'image fail')
@@ -171,7 +191,7 @@ function updateProductImage(req, res){
 }
 
 function getDetailProduct(req, res){
-	const productId = req.params.id
+	const productId = req.params.id;
 	if(validationGlobal.validateId(productId)){
 		ProductModel.findById(productId).populate({path:'stn_categoryFk'}).exec((err, data)=>{
 			if(err){
@@ -187,9 +207,28 @@ function getDetailProduct(req, res){
 	}
 }
 
+function getProductByCode(req, res){
+	let params_IN = req.params.codeProduct;
+	if(validationProduct.validationCodeProduct(params_IN)){
+		ProductModel.findOne({stn_referenceProduct:params_IN, stn_deleteProduct: false}, (err, product_OUT)=>{
+			if(err){
+                res.status(constantFile.httpCode.INTERNAL_SERVER_ERROR).send({message: constantFile.functions.PRODUCT_GET_ERROR});
+
+            }else if(!product_OUT){
+                res.status(constantFile.httpCode.PETITION_CORRECT).send({message: constantFile.functions.NO_PRODUCT_AVAIBLE});
+			}else{
+                res.status(constantFile.httpCode.PETITION_CORRECT).send({products: adapterProduct.AdapterProductByCode(product_OUT)});
+			}
+		});
+	}else{
+		paramsIvalids(res);
+	}
+}
+
 function getImageResizeFile(req, res) {
-	const imageFile = req.params.imageFile
-	const path_file = './Backend/uploadFiles/products/resize/'+imageFile
+	const imageFile = req.params.imageFile;
+	const path_file = './uploadFiles/products/resize/'+imageFile   //para linux
+	// const path_file = './Backend/uploadFiles/products/resize/'+imageFile;   //para windows
 
 	sendImageFile(path_file, res)
 }
@@ -198,7 +237,8 @@ function getImageResizeFile(req, res) {
 
 function getImageOriginalFile(req, res) {
 	const imageFile = req.params.imageFile
-	const path_file = './Backend/uploadFiles/products/original/'+imageFile
+	const path_file = './uploadFiles/products/original/'+imageFile //para linux
+	// const path_file = './Backend/uploadFiles/products/original/'+imageFile //para windows
 
 	sendImageFile(path_file, res)
 }
@@ -228,5 +268,7 @@ module.exports ={
 	updateProductImage,
 	getDetailProduct,
 	getImageResizeFile,
-	getImageOriginalFile
-}
+	getImageOriginalFile,
+    getProductByCode,
+	checkStockProduct
+};
