@@ -10,6 +10,9 @@ const category_routes = require('./routes/category.route')
 const product_routes = require('./routes/product.router')
 const person_router = require('./routes/person.route')
 const direcctionIp_router = require('./routes/direcctionIp.route')
+const provider_router = require('./routes/provider.router')
+const address_router = require('./routes/address.route')
+const bill_router = require('./routes/bill.route')
 //const animal_routes = require('./rutes/animal')
 
 //configurar middlewares de body-pare
@@ -28,12 +31,15 @@ app.use((req,res,next)=>{
 })
 
 //rutas base
-app.use('/', express.static('client', {redirect:false}))
+ app.use('/', express.static('client', {redirect:false}))
 app.use('/api', user_routes)
 app.use('/api', person_router)
 app.use('/api', direcctionIp_router)
 app.use('/api', category_routes)
 app.use('/api', product_routes)
+app.use('/api', provider_router)
+app.use('/api', address_router)
+app.use('/api', bill_router)
 app.get('*', function(req, res, next){
 	res.sendFile(path.resolve('client/index.html'))
 })
