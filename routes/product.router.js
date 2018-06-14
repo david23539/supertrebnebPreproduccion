@@ -5,13 +5,14 @@ const api = express.Router();
 const productController = require('../controller/product.controller');
 const md_auth = require('../middleware/autenticate.middleware');
 const multipart = require('connect-multiparty');
-//const md_upload = multipart({uploadDir:'./Backend/uploadFiles/products/original'});
+// const md_upload = multipart({uploadDir:'./Backend/uploadFiles/products/original'});
 const md_upload = multipart({uploadDir:'./uploadFiles/products/original'})
 
 api.post('/createProduct', md_auth.ensureAuth, productController.createProduct);
 api.post('/updateProduct', md_auth.ensureAuth, productController.updateProduct);
 api.post('/getProducts', md_auth.ensureAuth, productController.getProductAllPagination);
 api.post('/getProductByIds', md_auth.ensureAuth, productController.checkStockProduct);
+api.get('/getProductFavorites', md_auth.ensureAuth, productController.getFavoriteProduct);
 api.post('/uploadImageProduct/:id', [md_auth.ensureAuth, md_upload], productController.updateProductImage);
 api.get('/filterProducts/:key', md_auth.ensureAuth, productController.filterProduct);
 api.get('/countProducts', md_auth.ensureAuth, productController.countProduct);
