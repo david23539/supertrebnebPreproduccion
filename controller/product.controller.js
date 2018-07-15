@@ -7,8 +7,10 @@ const validationProduct = require('../Validation/product.validation')
 const validationGlobal = require('../Validation/global.validation')
 const auditoriaController = require('./saveLogs.controller')
 const serviceProduct = require('../service/product.service')
+const notificationController = require('./notification.controller');
 const fs = require('fs')
 const path = require('path')
+let productStock = [];
 
 
 
@@ -47,30 +49,57 @@ function createProduct(req, res){
 	}
 }
 
-function checkStockProduct(req, res){//todo funcion que devuelve todos los productos con los id obtenido por parametros
-	let product_IN = req.body;
-	if(validationProduct.checkIdsProduct(product_IN)){
-		ProductModel.find().where('_id').in(product_IN.ids).populate({path:'stn_categoryFk'}).exec((err, productsList_OUT)=>{
-			if(err){
-				console.log(err);
-			}
 
-			if(productsList_OUT.length > 0){
-				res.status(constantFile.httpCode.PETITION_CORRECT).send({products: adapterProduct.AdapterListProduct_OUT(productsList_OUT)});
-			}
-		});
 
+
+
+function changeStockProduct(req, res){
+	let params_IN = req.body;
+	productStock = [];
+	if(validationProduct.checkListStockProduct(params_IN)){
+		for(let item of params_IN){
+			ProductModel.findByIdAndUpdate(item.id, {$inc:{stn_stockProduct: -item.quantity}}, {new:true}, (err, prodcutStock_OUT)=>{
+				if(prodcutStock_OUT){
+					productStock.push(prodcutStock_OUT);
+					privateCheckStock(params_IN, res);
+				}
+			});
+		}
 	}else{
 		paramsIvalids(res);
 	}
 }
+
+function privateCheckStock(params_IN, res) {
+	if (params_IN.length === productStock.length) {
+		let i = 0;
+		for (let subItem of productStock) {
+			i++;
+			if (subItem._doc.stn_stockProduct <= subItem._doc.stn_stockProductMin) {
+				if(i === productStock.length){
+					notificationController.addNotification('Product', subItem._id, false, res);
+				}else{
+					notificationController.addNotification('Product', subItem._id, true, res);
+				}
+			}
+		}
+		productStock = [];
+	}
+}
+
+
 
 function checkReferenceProduct(reference, cb){
 	ProductModel.find({stn_referenceProduct:reference, stn_deleteProduct:false}, cb);
 }
 
 
-
+/**
+ * Actualizamos el producto.
+ * En casp de que se actualice el producto verificamos si su stoc es mayor a su minimo y nos tremos las notificaciones
+ * @param req
+ * @param res
+ */
 function updateProduct(req, res){
 	const params = req.body
 	const id = params.identifier.id
@@ -85,15 +114,19 @@ function updateProduct(req, res){
 					auditoriaController.saveLogsData(req.user.name,err, params.direccionIp.direccionData, params.direccionIp.navegador)
 					res.status(constantFile.httpCode.INTERNAL_SERVER_ERROR).send({message: constantFile.functions.PRODUCT_UPDATE_ERROR})
 				}else{
+					if(productUpdateStorage._doc.stn_stockProduct > productUpdateStorage._doc.stn_stockProductMin){
+						notificationController.notificationbyIdItem(productUpdateStorage._id, res);
+					}else{
+						notificationController.getNotifications(res);
+					}
 					auditoriaController.saveLogsData(req.user.name,constantFile.functions.PRODUCT_UPDATE_SUCCESS, params.direccionIp.direccionData, params.direccionIp.navegador)
-					res.status(constantFile.httpCode.PETITION_CORRECT).send({message: constantFile.functions.PRODUCT_UPDATE_SUCCESS, id:productUpdateStorage._doc._id})
 				}
-			})
+			});
 		}else{
-			paramsIvalids(res)
+			paramsIvalids(res);
 		}
 	}else{
-		paramsIvalids(res)
+		paramsIvalids(res);
 	}
 }
 
@@ -286,5 +319,5 @@ module.exports ={
 	getImageOriginalFile,
     getProductByCode,
     getFavoriteProduct,
-	checkStockProduct
+    changeStockProduct,
 };
