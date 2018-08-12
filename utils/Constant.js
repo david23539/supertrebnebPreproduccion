@@ -122,8 +122,8 @@ const constant ={
 	regex:{
 		EMAIL:'^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$',
 		USERNAME: '^[0-9a-zA-Z]+$',
-		STRINGS: '^[0-9a-zA-Z]+$',
-		STRINGS_WITH_SPACES: '^[A-Za-z0-9áÁéÉíÍóÓúÚ.,` \s]+$',
+		STRINGS: '^[0-9a-zA-ZñÑ-]+$',
+		STRINGS_WITH_SPACES: '^[A-Za-z0-9áÁéÉíÍóÓúÚñÑ.,-` \s]+$',
 		CODE: '^([0-9])*$',
 		NUMBERS: '^([0-9])*$',
 		NUMBERS_AND_DECIMAL: '^[0-9]+([.][0-9]+)?$'
@@ -140,6 +140,7 @@ const constant ={
 		PROVIDER_RELATION_CONTACT:'numero de registros de personas de Contacto cambiados '
 	},
 	urls:{
+		URL_REPORT_BILLS:'http://davizco-tech.es:5488/api/report',
 		CHANGE_IP:'/../template/changeIp.html',
 		PRODUCT_IMG_ORIGINAL:'./uploadFiles/products/original/',// para linux
 		// PRODUCT_IMG_ORIGINAL:'./Backend/uploadFiles/products/original/', //para Windows

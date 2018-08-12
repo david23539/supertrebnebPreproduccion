@@ -5,7 +5,9 @@ const bodyParser = require('body-parser')
 const app = express()
 const helmet = require('helmet');
 const path = require('path')
-//const limiter = require('express-limiter')(app, client);
+const compression = require('compression');
+
+
 
 
 
@@ -19,7 +21,6 @@ const provider_router = require('./routes/provider.router')
 const address_router = require('./routes/address.route')
 const bill_router = require('./routes/bill.route')
 const notification_router = require('./routes/notifications.route')
-//const animal_routes = require('./rutes/animal')
 
 //configurar middlewares de body-pare
 app.use(bodyParser.urlencoded({extend: false}))
@@ -37,8 +38,8 @@ app.disable('x-powered-by');
 
 //configurar cabeceras y cors
 app.use((req,res,next)=>{
-	res.header('Access-Control-Allow-Origin', '159.89.25.242');
-	// res.header('Access-Control-Allow-Origin', '*');
+	// res.header('Access-Control-Allow-Origin', '159.89.25.242');
+	res.header('Access-Control-Allow-Origin', '*');
 	res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method')
 	res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
 	res.header('Allow', 'GET, POST, PUT, DELETE')
@@ -61,6 +62,7 @@ app.get('*', function(req, res, next){
 	res.sendFile(path.resolve('client/index.html'))
 });
 
+app.use(compression());
 
 //rutas body-parse
 
