@@ -20,7 +20,8 @@ const direcctionIp_router = require('./routes/direcctionIp.route')
 const provider_router = require('./routes/provider.router')
 const address_router = require('./routes/address.route')
 const bill_router = require('./routes/bill.route')
-const notification_router = require('./routes/notifications.route')
+const notification_router = require('./routes/notifications.route');
+const ticket_router = require('./routes/ticket.route');
 
 //configurar middlewares de body-pare
 app.use(bodyParser.urlencoded({extend: false}))
@@ -38,8 +39,8 @@ app.disable('x-powered-by');
 
 //configurar cabeceras y cors
 app.use((req,res,next)=>{
-	// res.header('Access-Control-Allow-Origin', '159.89.25.242');
-	res.header('Access-Control-Allow-Origin', '*');
+	res.header('Access-Control-Allow-Origin', '159.89.25.242');
+	// res.header('Access-Control-Allow-Origin', '*');
 	res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method')
 	res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
 	res.header('Allow', 'GET, POST, PUT, DELETE')
@@ -57,6 +58,7 @@ app.use('/api', provider_router)
 app.use('/api', address_router)
 app.use('/api', bill_router)
 app.use('/api', notification_router)
+app.use('/api', ticket_router);
 
 app.get('*', function(req, res, next){
 	res.sendFile(path.resolve('client/index.html'))
