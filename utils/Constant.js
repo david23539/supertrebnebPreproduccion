@@ -83,6 +83,7 @@ const constant ={
 		CATEGORY_DELETE_SUCCESS: 'La categoria se ha eliminado',
 		PROVIDER_DELETE_SUCCESS: 'El proveedor se ha eliminado',
 		PRODUCT_DELETE_SUCCESS: 'El producto se ha eliminado',
+		PRODUCTS_DELETE_SUCCESS: 'Los productos se han eliminado',
 		CATEGORY_DELETE_ERROR: 'Ha ocurrido un error al eliminar la categoria',
 		PRODUCT_DELETE_ERROR: 'Ha ocurrido un error al eliminar el producto',
 		PROVIDER_DELETE_ERROR: 'Ha ocurrido un error al eliminar el proveedor',
@@ -102,6 +103,7 @@ const constant ={
 		NO_DATA_AVAIBLE:'No existen categorías',
 		NO_DATA:'No hay datos',
 		NO_PRODUCT_AVAIBLE:'No existen productos',
+		WORKING_IN_PURGUE_PRODUCTS:'Se esta trabajando en purgar los productos. Puede seguir con su trabajo ',
 		NO_BILLS_AVAIBLE:'No existen facturas',
 		NO_CATEGORY_AVAIBLE:'No existen categorías',
 		NO_PROVIDERS_AVAIBLE:'No existen proveedores',
@@ -143,7 +145,7 @@ const constant ={
 		PROVIDER_RELATION_CONTACT:'numero de registros de personas de Contacto cambiados '
 	},
 	urls:{
-		URL_REPORT_BILLS:'http://davizco-tech.es:5488/api/report',
+		URL_REPORT_BILLS:'http://autoserviciolalla.es:5488/api/report',
 		CHANGE_IP:'/../template/changeIp.html',
 		PRODUCT_IMG_ORIGINAL:'./uploadFiles/products/original/',// para linux
 		// PRODUCT_IMG_ORIGINAL:'./Backend/uploadFiles/products/original/', //para Windows
